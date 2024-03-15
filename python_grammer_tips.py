@@ -67,3 +67,30 @@ chr(12)    # 12 아스키코드에 해당하는 값
 "*".center(10, "-")
 "*".ljust(10, "-")
 "*".rjust(10, "-")
+
+
+# 파이썬 정규 표현식 사용
+import re
+print(re.search('a', 'bba'))
+# <re.Match object; span=(2, 3), match='a'>
+print(re.findall('\d', '숫자123이 이렇게56 있다8'))
+print(re.findall('\d+', '숫자123이 이렇게56 있다8'))
+# ['1', '2', '3', '5', '6', '8']
+# ['123', '56', '8']
+print(re.fullmatch('a', 'a'))
+print(re.fullmatch('a', 'aaa'))
+print(re.fullmatch('a', 'baa'))
+# <re.Match object; span=(0, 1), match='a'>
+# None
+# None
+
+
+# 람다 함수
+func = lambda x,y: x + y
+print(func(1, 2))
+
+
+# sorted함수의 key 사용
+my_list = ["api", "app", "carrier", "demon", "aaa"]
+sorted(my_list, key= lambda x : (len(x), x))
+sorted("adbbarki", "adbbarki".find)    # aadbbrki
