@@ -94,3 +94,11 @@ print(func(1, 2))
 my_list = ["api", "app", "carrier", "demon", "aaa"]
 sorted(my_list, key= lambda x : (len(x), x))
 sorted("adbbarki", "adbbarki".find)    # aadbbrki
+
+
+# 파이썬 진수변환
+int("Z34AB", 36)
+
+
+# 몫과 나머지 한번에 할당
+Q, R = divmod(36, 10)   # Q: 3, R: 6
