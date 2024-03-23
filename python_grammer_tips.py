@@ -41,6 +41,9 @@ print(*[num for num in range(1, 11) if not num % 2])
 # a에 0 입력할때까지 계속 출력
 while a := int(input()):
     print(a)
+# 아래처럼 할당과 비교를 동시에 할수도 있음
+while (s:=input()) != "0":
+    print(s)
 
 
 # 리스트의 특정 범위 변경
@@ -63,10 +66,22 @@ chr(12)    # 12 아스키코드에 해당하는 값
 " ".join(["apple", "banana", "grape"])
 
 
+# 문자열 대소문자 내장함수
+"aBcDeFg".isuuper()     # False
+"aBcDeFg".islower()     # False
+"aBcDeFg".upper()       # ABCDEFG
+"aBcDeFg".lower()       # abcdefg
+"aBcDeFg".swapcase()    # AbCdEfG
+
+
 # 문자열 정렬
 "*".center(10, "-")
 "*".ljust(10, "-")
 "*".rjust(10, "-")
+
+
+# 문자열 내 숫자 표기시 0 채우기
+str(5).zfill(2)   # "05"
 
 
 # 파이썬 정규 표현식 사용
@@ -100,5 +115,7 @@ sorted("adbbarki", "adbbarki".find)    # aadbbrki
 int("Z34AB", 36)
 
 
-# 몫과 나머지 한번에 할당
+# 내장 산술 연산
 Q, R = divmod(36, 10)   # Q: 3, R: 6
+round(5.3)   # 5
+pow(5, 3)    # 5^3
