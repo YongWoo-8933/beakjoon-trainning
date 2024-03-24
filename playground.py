@@ -32,5 +32,9 @@
 10
 """
 I,T=input,int
-f=lambda n,k:f(n-1,k)*(f(n-1,k)+1)//2 if n else k
-for _ in range(T(I())):k,n=T(I()),T(I());print(f(k,n))
+l=[[_+1 for _ in range(14)] for _ in range(14)]
+for i in range(1,14):
+    for j in range(14):
+        l[i][j]=sum(l[i-1][:j+1])
+for _ in range(T(I())):
+    k,n=T(I()),T(I());print(l[k][n-1])
