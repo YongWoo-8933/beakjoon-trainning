@@ -122,5 +122,10 @@ int("Z34AB", 36)
 
 # 내장 산술 연산
 Q, R = divmod(36, 10)   # Q: 3, R: 6
-round(5.3)   # 5
+int(5.3+0.5)   # 5.3 반올림 => round 사용금지!!!!
 pow(5, 3)    # 5^3
+
+
+# 콤비네이션(경우의수)
+import math
+math.comb(5,2)
