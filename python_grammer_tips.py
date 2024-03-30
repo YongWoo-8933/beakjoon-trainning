@@ -129,3 +129,21 @@ pow(5, 3)    # 5^3
 # 콤비네이션(경우의수)
 import math
 math.comb(5,2)
+
+
+# 조합 직접 주하기
+import itertools
+itertools.combinations([1, 2, 3], 2)    # [(1, 2), (2, 3), (1, 3)]
+
+
+# 문자열 / 숫자 판별
+"123".isdigit()       # True
+"33ffold".isdigit()   # False
+"ffold".isalpha()   # True
+"33ffold".isalpha()   # False
+
+
+# 최대 공약수, 최소 공배수
+import math
+math.gcd(8,14)    # 2
+math.lcm(10,16)   # 80

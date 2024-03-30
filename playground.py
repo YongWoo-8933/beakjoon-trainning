@@ -56,36 +56,17 @@ push연산은 +로, pop 연산은 -로 표현하도록 한다. 불가능한 경�
 예제 출력 2 
 NO
 """
-import sys
-N=int(input())
-l=[int(i) for i in sys.stdin][::-1]
-m=[1]*N
-v=l.pop()
-r="+"
-p=0
-while 1:
-    if p+1==v:
-        r+="-"
-        m[p]=0
-        if l:
-            v=l.pop()
-        else:
-            print(r)
-            break
-    elif p+1<v:
-        p+=1
-        r+="+"
+a,A=map(int,input().split())
+b,B=map(int,input().split())
+c,C=b*A+a*B,A*B
+d,D=min(c,C),max(c,C)
+while d!=1:
+    if D%d:
+        d,D=D%d,d
     else:
-        if sum(m[v-1:p])!=1:
-            print("NO")
-            break
-        else:
-            r+="-"
-            m[v-1]=0
-            if l:
-                v=l.pop()
-            else:
-                print(r)
-                break
+        break
+print(c//d,C//d)
+
+
 
 
