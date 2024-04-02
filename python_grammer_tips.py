@@ -147,3 +147,9 @@ itertools.combinations([1, 2, 3], 2)    # [(1, 2), (2, 3), (1, 3)]
 import math
 math.gcd(8,14)    # 2
 math.lcm(10,16)   # 80
+
+
+# 원 리스트형 문제
+import collections
+collections.deque([1,2,3,4,5]).rotate(1)   # [5,1,2,3,4]
+collections.deque([1,2,3,4,5]).rotate(-1)   # [2,3,4,5,1]
