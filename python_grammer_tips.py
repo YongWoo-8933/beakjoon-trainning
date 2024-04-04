@@ -131,9 +131,11 @@ import math
 math.comb(5,2)
 
 
-# 조합 직접 주하기
-import itertools
+# 조합 직접 주하기 // mCn만 구하기
+import itertools, math
 itertools.combinations([1, 2, 3], 2)    # [(1, 2), (2, 3), (1, 3)]
+math.comb(4, 2)   # 6
+
 
 
 # 문자열 / 숫자 판별
