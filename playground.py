@@ -34,21 +34,12 @@ x는 231보다 작은 자연수 또는 0이고, 음의 정수는 입력으로 �
 12345678
 0
 """
-for _ in range(int(input())):
-    category = set()
-    clothes = {}
-    for i in range(int(input())):
-        _, b = input().split()
-        if b in category:
-            clothes[b] += 1
-        else:
-            clothes[b] = 1
-            category.add(b)
-    result = 1
-    for i in clothes.values():
-        result *= i+1
-    print(result - 1)
-
+N = int(input())
+dp = [1, 2, 3]
+for i in range(2, 225):
+    dp += [1]
+    dp += [1+j for j in dp[:(i+1)**2-i**2-1]]
+print(dp[:200])
 
 
 
