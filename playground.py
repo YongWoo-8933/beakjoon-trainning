@@ -1,36 +1,90 @@
 """
-문제
-피보나치 수는 0과 1로 시작한다. 0번째 피보나치 수는 0이고, 1번째 피보나치 수는 1이다. 그 다음 2번째 부터는 바로 앞 두 피보나치 수의 합이 된다.
-
-이를 식으로 써보면 Fn = Fn-1 + Fn-2 (n ≥ 2)가 된다.
-
-n=17일때 까지 피보나치 수를 써보면 다음과 같다.
-
-0, 1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144, 233, 377, 610, 987, 1597
-
-n이 주어졌을 때, n번째 피보나치 수를 구하는 프로그램을 작성하시오.
-
-입력
-첫째 줄에 n이 주어진다. n은 1,000,000,000,000,000,000보다 작거나 같은 자연수이다.
-
-출력
-첫째 줄에 n번째 피보나치 수를 1,000,000,007으로 나눈 나머지를 출력한다.
-
-예제 입력 1 
-1000
-예제 출력 1 
-517691607
+6 4
+1 -1 0 0 0 0
+0 -1 0 0 0 0
+0 0 0 0 -1 0
+0 0 0 0 -1 1
 """
-def f(n: int) -> int:
-    if n == 1:
-        return 1
-    elif n == 2:
-        return 1
-    else:
-        x = f(n//2)
-        y = f(1+n//2)**2 if n%2 else 2*x*f(n//2-1)
-        return (x*x + y)%1000000007
-print(f(100000000))
+from sys import stdin
+import collections
+W, H = map(int, stdin.readline().split())
+# M = [[*map(int, i.split())] for i in stdin]
+# M = [
+#     [1, -1, 0, 0, 0, 0],
+#     [0, -1, 0, 0, 0, 0],
+#     [0, 0, 0, 0, -1, 0],
+#     [0, 0, 0, 0, -1, 1],
+# ]
+# M = [
+#     [0 ,-1, 0, 0, 0, 0],
+#     [-1, 0, 0, 0, 0, 0],
+#     [0, 0, 0, 0, 0, 0,],
+#     [0, 0, 0, 0, 0, 1,],
+# ]
+# M = [
+#     [0, 0, 0, 0, 0, 0],
+#     [0, 0, 0, 0, 0, 0],
+#     [0, 0, 0, 0, 0, 0],
+#     [0, 0, 0, 0, 0, 1],
+# ]
+# M = [
+#     [-1, 1, 0, 0, 0],
+#     [0, -1, -1, -1, 0],
+#     [0, -1, -1, -1, 0],
+#     [0, -1, -1, -1, 0],
+#     [0, 0, 0, 0, 0],
+# ]
+# M = [
+#     [1, -1],
+#     [-1, 1],
+# ]
+result = M
+check = [[1]*W for _ in range(H)]
+q = collections.deque()
+for i in range(H):
+    for j in range(W):
+        m = M[i][j]
+        if m == 1:
+            q.append((0, i, j))
+            check[i][j] = 0
+        if m == -1:
+            check[i][j] = 0
+
+max_value = -1
+while q:
+    next_q = collections.deque()
+    while q:
+        value, row, col = q.popleft()
+        x = M[row][col]
+
+        if x==-1: 
+            continue
+        elif x==0:
+            value += 1
+        elif x==1 and check[row][col]:
+            check[row][col] = 0
+            q.append((value, row, col))
+
+        max_value = max(max_value, value)
+
+        if row > 0 and check[row-1][col]:
+            check[row-1][col] = 0
+            q.append((value, row-1, col))
+        if row < H-1 and check[row+1][col]:
+            check[row+1][col] = 0
+            q.append((value, row+1, col))
+        if col > 0 and check[row][col-1]:
+            check[row][col-1] = 0
+            q.append((value, row, col-1))
+        if col < W-1 and check[row][col+1]:
+            check[row][col+1] = 0
+            q.append((value, row, col+1))
+
+print(-1 if sum(sum(i) for i in check) else max_value)
+
+
+
+
 
 
 
