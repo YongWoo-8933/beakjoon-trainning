@@ -155,3 +155,6 @@ math.lcm(10,16)   # 80
 import collections
 collections.deque([1,2,3,4,5]).rotate(1)   # [5,1,2,3,4]
 collections.deque([1,2,3,4,5]).rotate(-1)   # [2,3,4,5,1]
+
+
+# set에 새로운 값을 추가하면 정렬되지 않을 수 있다
