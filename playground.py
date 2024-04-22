@@ -1,88 +1,93 @@
 """
 문제
-네 개의 명령어 D, S, L, R 을 이용하는 간단한 계산기가 있다. 
-이 계산기에는 레지스터가 하나 있는데, 
-이 레지스터에는 0 이상 10,000 미만의 십진수를 저장할 수 있다. 
-각 명령어는 이 레지스터에 저장된 n을 다음과 같이 변환한다. 
-n의 네 자릿수를 d1, d2, d3, d4라고 하자(즉 n = ((d1 × 10 + d2) × 10 + d3) × 10 + d4라고 하자)
+널리 잘 알려진 자료구조 중 최소 힙이 있다. 최소 힙을 이용하여 다음과 같은 연산을 지원하는 프로그램을 작성하시오.
 
-D: D 는 n을 두 배로 바꾼다. 결과 값이 9999 보다 큰 경우에는 10000 으로 나눈 나머지를 취한다. 그 결과 값(2n mod 10000)을 레지스터에 저장한다.
-S: S 는 n에서 1 을 뺀 결과 n-1을 레지스터에 저장한다. n이 0 이라면 9999 가 대신 레지스터에 저장된다.
-L: L 은 n의 각 자릿수를 왼편으로 회전시켜 그 결과를 레지스터에 저장한다. 
-이 연산이 끝나면 레지스터에 저장된 네 자릿수는 왼편부터 d2, d3, d4, d1이 된다.
-R: R 은 n의 각 자릿수를 오른편으로 회전시켜 그 결과를 레지스터에 저장한다. 
-이 연산이 끝나면 레지스터에 저장된 네 자릿수는 왼편부터 d4, d1, d2, d3이 된다.
-
-위에서 언급한 것처럼, L 과 R 명령어는 십진 자릿수를 가정하고 연산을 수행한다. 
-예를 들어서 n = 1234 라면 여기에 L 을 적용하면 2341 이 되고 R 을 적용하면 4123 이 된다.
-
-여러분이 작성할 프로그램은 주어진 서로 다른 두 정수 A와 B(A ≠ B)에 대하여 
-A를 B로 바꾸는 최소한의 명령어를 생성하는 프로그램이다. 
-예를 들어서 A = 1234, B = 3412 라면 다음과 같이 두 개의 명령어를 적용하면 A를 B로 변환할 수 있다.
-
-1234 →L 2341 →L 3412
-1234 →R 4123 →R 3412
-
-따라서 여러분의 프로그램은 이 경우에 LL 이나 RR 을 출력해야 한다.
-
-n의 자릿수로 0 이 포함된 경우에 주의해야 한다. 
-예를 들어서 1000 에 L 을 적용하면 0001 이 되므로 결과는 1 이 된다. 
-그러나 R 을 적용하면 0100 이 되므로 결과는 100 이 된다.
+배열에 자연수 x를 넣는다.
+배열에서 가장 작은 값을 출력하고, 그 값을 배열에서 제거한다.
+프로그램은 처음에 비어있는 배열에서 시작하게 된다.
 
 입력
-프로그램 입력은 T 개의 테스트 케이스로 구성된다. 
-테스트 케이스 개수 T 는 입력의 첫 줄에 주어진다. 
-각 테스트 케이스로는 두 개의 정수 A와 B(A ≠ B)가 공백으로 분리되어 차례로 주어지는데 
-A는 레지스터의 초기 값을 나타내고 B는 최종 값을 나타낸다. A 와 B는 모두 0 이상 10,000 미만이다.
+첫째 줄에 연산의 개수 N(1 ≤ N ≤ 100,000)이 주어진다. 
+다음 N개의 줄에는 연산에 대한 정보를 나타내는 정수 x가 주어진다. 
+만약 x가 자연수라면 배열에 x라는 값을 넣는(추가하는) 연산이고, 
+x가 0이라면 배열에서 가장 작은 값을 출력하고 그 값을 배열에서 제거하는 경우이다. 
+x는 231보다 작은 자연수 또는 0이고, 음의 정수는 입력으로 주어지지 않는다.
 
 출력
-A에서 B로 변환하기 위해 필요한 최소한의 명령어 나열을 출력한다. 가능한 명령어 나열이 여러가지면, 아무거나 출력한다.
+입력에서 0이 주어진 횟수만큼 답을 출력한다. 
+만약 배열이 비어 있는 경우인데 가장 작은 값을 출력하라고 한 경우에는 0을 출력하면 된다.
 
 예제 입력 1 
-3
-1234 3412
-1000 1
-1 16
+9
+0
+12345678
+1
+2
+0
+0
+0
+0
+32
 예제 출력 1 
-LL
-L
-DDDD
+0
+1
+2
+12345678
+0
+
+
+1
+10
+2
+30
+40
+300
+400
+25
+0
+0
 """
 from sys import stdin
 from collections import deque
 stdin.readline()
+heap = deque()
 for i in stdin:
-    A, B = map(int, i.split())
-    check = [1]*10000
-    q = deque([("", A)])
-    check[A] = 0
-    while q:
-        n = len(q)
-        while n:
-            his, num = q.popleft()
-            if num == B:
-                print(his)
-                break
-            new_num_d = (num*2)%10000
-            new_num_s = (num-1)%10000
-            new_num_l = (num%1000)*10+num//1000
-            new_num_r = (num%10)*1000+num//10
-            if check[new_num_d]:
-                check[new_num_d] = 0
-                q.append(("".join((his, "D")), new_num_d))
-            if check[new_num_s]:
-                check[new_num_s] = 0
-                q.append(("".join((his, "S")), new_num_s))
-            if check[new_num_l]:
-                check[new_num_l] = 0
-                q.append(("".join((his, "L")), new_num_l))
-            if check[new_num_r]:
-                check[new_num_r] = 0
-                q.append(("".join((his, "R")), new_num_r))
-            n-=1
+    option = int(i)
+    if option:
+        heap.append(option)
+        child = len(heap)-1
+        parent = (child-1)//2
+        while child and heap[child] < heap[parent]:
+            heap[parent], heap[child] = heap[child], heap[parent]
+            child = parent
+            parent = (child-1)//2
+    else:
+        if len(heap)>1:
+            print(heap.popleft())
+            heap.appendleft(heap.pop())
+            parent = 0
+            last_idx = len(heap)-1
+            while parent < last_idx:
+                l_child = parent*2+1
+                r_child = parent*2+2
+                if r_child <= last_idx:
+                    if heap[l_child] <= heap[r_child] and heap[l_child] < heap[parent]:
+                        heap[parent], heap[l_child] = heap[l_child], heap[parent]
+                        parent = l_child
+                    elif heap[r_child] < heap[l_child] and heap[r_child] < heap[parent]:
+                        heap[parent], heap[r_child] = heap[r_child], heap[parent]
+                        parent = r_child
+                    else:
+                        break
+                elif l_child <= last_idx and heap[l_child] < heap[parent]:
+                    heap[parent], heap[l_child] = heap[l_child], heap[parent]
+                    parent = l_child
+                else:
+                    break
+        elif len(heap)==1:
+            print(heap.pop())
         else:
-            continue
-        break
+            print(0)
 
 
 
