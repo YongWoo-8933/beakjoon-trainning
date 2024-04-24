@@ -55,89 +55,29 @@ EMPTY
 """
 from sys import stdin
 
-class Node:
-    def __init__(self, key, left = None, right = None):
-        self.key = key
-        self.left = left
-        self.right = right
+dict = {1: "은지", 6: "지영", 3: "채원", 2: "다빈"}
+dict[5] = "아영"
+dict[8] = "타희"
 
-class BinarySearchTree:
-    def __init__(self):
-        self.root = None
+"ds".replace("s", "d")
 
-    def is_not_empty(self):
-        return self.root is not None
+print(80.56 % 10)
 
-    def add(self, key):
-        if self.root:
-            node = self.root
-            while 1:
-                if node.key > key:
-                    if node.left:
-                        node = node.left
-                    else:
-                        node.left = Node(key)
-                        break
-                else:
-                    if node.right:
-                        node = node.right
-                    else:
-                        node.right = Node(key)
-                        break
-        else:
-            self.root = Node(key)
+# print(dict.keys())
 
-    def min_key(self) -> str:
-        min_node = self.root
-        while min_node.left: 
-            min_node = min_node.left
-        return str(min_node.key)
-
-    def max_key(self) -> str:
-        max_node = self.root
-        while max_node.right: 
-            max_node = max_node.right
-        return str(max_node.key)
-
-    def pop_min(self) -> None:
-        parent = self.root
-        min_node = parent.left
-        while min_node and min_node.left: 
-            parent = min_node
-            min_node = min_node.left
-        if min_node is None:
-            self.root = parent.right
-        elif min_node.right:
-            parent.left = min_node.right
-        else:
-            parent.left = None
-
-    def pop_max(self) -> None:
-        parent = self.root
-        max_node = parent.right
-        while max_node and max_node.right: 
-            parent = max_node
-            max_node = max_node.right
-        if max_node is None:
-            self.root = parent.left
-        elif max_node.left:
-            parent.right = max_node.left
-        else:
-            parent.right = None
-
-for _ in range(int(stdin.readline())):
-    tree = BinarySearchTree()
-    for _ in range(int(stdin.readline())):
-        o, x = stdin.readline().strip().split()
-        if o=="I":
-            tree.add(int(x))
-        else:
-            if tree.is_not_empty():
-                if x=="1":
-                    tree.pop_max()
-                else:
-                    tree.pop_min()
-    print(" ".join((tree.max_key(), tree.min_key())) if tree.is_not_empty() else "EMPTY")
+# for _ in range(int(stdin.readline())):
+#     tree = BinarySearchTree()
+#     for _ in range(int(stdin.readline())):
+#         o, x = stdin.readline().strip().split()
+#         if o=="I":
+#             tree.add(int(x))
+#         else:
+#             if tree.is_not_empty():
+#                 if x=="1":
+#                     tree.pop_max()
+#                 else:
+#                     tree.pop_min()
+#     print(" ".join((tree.max_key(), tree.min_key())) if tree.is_not_empty() else "EMPTY")
 
 
 

@@ -78,7 +78,6 @@ chr(12)    # 12 아스키코드에 해당하는 값
 "aBcDeFg".lower()       # abcdefg
 "aBcDeFg".swapcase()    # AbCdEfG
 
-
 # 문자열 정렬
 "*".center(10, "-")
 "*".ljust(10, "-")
@@ -118,6 +117,9 @@ sorted("adbbarki", "adbbarki".find)    # aadbbrki
 
 # 파이썬 진수변환
 int("Z34AB", 36)
+bin(11) # 2진수
+oct(11) # 8진수
+hex(11) # 16진수
 
 
 # 내장 산술 연산
