@@ -117,10 +117,9 @@ sorted("adbbarki", "adbbarki".find)    # aadbbrki
 
 # 파이썬 진수변환
 int("Z34AB", 36)
-bin(11) # 2진수
-oct(11) # 8진수
-hex(11) # 16진수
-
+bin(11) # 0b1011 2진수
+oct(11) # 0o13   8진수
+hex(11) # 0xb    16진수
 
 # 내장 산술 연산
 Q, R = divmod(36, 10)   # Q: 3, R: 6

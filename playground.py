@@ -53,31 +53,21 @@ I 333
 EMPTY
 333 -45
 """
-from sys import stdin
+def solution(targets):
+    targets.sort(key=lambda x: (x[1], x[0]))
+    start = targets.pop()[0]
+    count = 1
+    while targets:
+        last = targets.pop()
+        if last[1] > start:
+            start = max(last[0], start)
+        else:
+            start = last[0]
+            count += 1
+            
+    return count
 
-dict = {1: "은지", 6: "지영", 3: "채원", 2: "다빈"}
-dict[5] = "아영"
-dict[8] = "타희"
-
-"ds".replace("s", "d")
-
-print(80.56 % 10)
-
-# print(dict.keys())
-
-# for _ in range(int(stdin.readline())):
-#     tree = BinarySearchTree()
-#     for _ in range(int(stdin.readline())):
-#         o, x = stdin.readline().strip().split()
-#         if o=="I":
-#             tree.add(int(x))
-#         else:
-#             if tree.is_not_empty():
-#                 if x=="1":
-#                     tree.pop_max()
-#                 else:
-#                     tree.pop_min()
-#     print(" ".join((tree.max_key(), tree.min_key())) if tree.is_not_empty() else "EMPTY")
+print(solution([[4,5],[4,8],[10,14],[11,13],[5,12],[3,7],[1,4]]))
 
 
 
