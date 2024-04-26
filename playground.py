@@ -53,6 +53,8 @@ I 333
 EMPTY
 333 -45
 """
+import copy
+
 def solution(targets):
     targets.sort(key=lambda x: (x[1], x[0]))
     start = targets.pop()[0]
