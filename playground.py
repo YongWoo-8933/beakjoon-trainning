@@ -53,36 +53,79 @@ I 333
 EMPTY
 333 -45
 """
-import copy
+from collections import deque
+from copy import deepcopy
 
-def solution(targets):
-    targets.sort(key=lambda x: (x[1], x[0]))
-    start = targets.pop()[0]
-    count = 1
-    while targets:
-        last = targets.pop()
-        if last[1] > start:
-            start = max(last[0], start)
-        else:
-            start = last[0]
-            count += 1
+def solution(maps):
+    H, W = len(maps), len(maps[0])
+    check_ori = []
+    start_row, start_col = 0, 0
+    for i in range(H):
+        row = []
+        for j in range(W):
+            x = maps[i][j]
+            row.append([1, 0][x=="X"])
+            if x=="S":
+                start_row, start_col = i, j
+        check_ori.append(row)
+        
+    check = deepcopy(check_ori)
+    check[start_row][start_col] = 0
+    q = deque([(0, start_row, start_col)])
+    while q:
+        n = len(q)
+        while n:
+            count, row, col = q.popleft()
+            if maps[row][col] == "L":
+                q = deque([(count, row, col)])
+                break
             
-    return count
+            count += 1
+            if row > 0 and check[row-1][col]:
+                check[row-1][col] = 0
+                q.append((count, row-1, col))
+            if row < H-1 and check[row+1][col]:
+                check[row+1][col] = 0
+                q.append((count, row+1, col))
+            if col > 0 and check[row][col-1]:
+                check[row][col-1] = 0
+                q.append((count, row, col-1))
+            if col < W-1 and check[row][col+1]:
+                check[row][col+1] = 0
+                q.append((count, row, col+1))
+            n-=1
+        else:
+            continue
+        break
+        
+    if not q: return -1
+        
+    check = deepcopy(check_ori)
+    check[q[0][1]][q[0][2]] = 0
+    his = []
+    while q:
+        n = len(q)
+        while n:
+            count, row, col = q.pop()
+            his.append((count, row, col))
+            if maps[row][col] == "E":
+                return his
+            
+            count += 1
+            if row > 0 and check[row-1][col]:
+                check[row-1][col] = 0
+                q.append((count, row-1, col))
+            if row < H-1 and check[row+1][col]:
+                check[row+1][col] = 0
+                q.append((count, row+1, col))
+            if col > 0 and check[row][col-1]:
+                check[row][col-1] = 0
+                q.append((count, row, col-1))
+            if col < W-1 and check[row][col+1]:
+                check[row][col+1] = 0
+                q.append((count, row, col+1))
+            
+            n-=1
+    return -1
 
-print(solution([[4,5],[4,8],[10,14],[11,13],[5,12],[3,7],[1,4]]))
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+print(solution(["LOOOS", "OOOOX", "OOOOO", "OOOOO", "EOOOO"]))
