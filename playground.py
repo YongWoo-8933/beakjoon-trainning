@@ -80,6 +80,7 @@ def solution(maps):
                 q = deque([(count, row, col)])
                 break
             
+            
             count += 1
             if row > 0 and check[row-1][col]:
                 check[row-1][col] = 0
