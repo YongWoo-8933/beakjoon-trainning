@@ -159,3 +159,12 @@ collections.deque([1,2,3,4,5]).rotate(-1)   # [2,3,4,5,1]
 
 
 # set에 새로운 값을 추가하면 정렬되지 않을 수 있다
+
+
+# collections의 Counter로 각 원소수 세기 (dict형 반환)
+import collections
+collections.Counter("hello")   # {"h": 1, "e": 1, "l": 2, "o": 1}
+
+
+# any활용(리스트중 하나라도 있을 경우)
+any(i%2 != 0 for i in range(3))    # True
