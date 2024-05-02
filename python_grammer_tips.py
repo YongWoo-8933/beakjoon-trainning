@@ -168,3 +168,5 @@ collections.Counter("hello")   # {"h": 1, "e": 1, "l": 2, "o": 1}
 
 # any활용(리스트중 하나라도 있을 경우)
 any(i%2 != 0 for i in range(3))    # True
+
+

@@ -56,4 +56,7 @@ EMPTY
 from collections import deque
 from copy import deepcopy
 
-print(any(i%2 == 0 for i in range(3)))
+a, b = set(), set()
+a.
+
+print(any(i%2 != 0 for i in range(3)))
