@@ -30,33 +30,50 @@ Q에 저장될 모든 정수는 -2^31 이상 2^31 미만인 정수이다.
 두 값은 한 줄에 출력하되 하나의 공백으로 구분하라. 만약 Q가 비어있다면 ‘EMPTY’를 출력하라.
 
 예제 입력 1 
-2
-7
-I 16
-I -5643
+1
+13
+I 1
+I 1
+I 1
+I 1
+D 1
+D 1
+I 0
+I 1
+I 2
 D -1
-D 1
-D 1
-I 123
 D -1
-9
-I -45
-I 653
-D 1
-I -642
-I 45
-I 97
-D 1
 D -1
-I 333
-예제 출력 1 
-EMPTY
-333 -45
+D -1
 """
-from collections import deque
-from copy import deepcopy
+from heapq import heappush, heappop
+from sys import stdin
 
-a, b = set(), set()
-a.
-
-print(any(i%2 != 0 for i in range(3)))
+for _ in range(int(stdin.readline())):
+    min_heap, max_heap = [], []
+    min_popped, max_popped = 0, 0
+    for _ in range(int(stdin.readline())):
+        option = stdin.readline().strip()
+        if option[0] == "I":
+            x = int(option[2:])
+            heappush(min_heap, x)
+            heappush(max_heap, -x)
+        elif option[2] == "1":
+            if len(max_heap) > min_popped:
+                max_popped += 1
+                heappop(max_heap)
+        else:
+            if len(min_heap) > max_popped:
+                min_popped += 1
+                heappop(min_heap)
+        if len(max_heap) == min_popped or len(min_heap) == max_popped:
+            min_heap, max_heap = [], []
+            min_popped, max_popped = 0, 0
+    remain = len(min_heap) - max_popped
+    if remain > 1:
+        print(-heappop(max_heap), heappop(min_heap))
+    elif remain == 1:
+        x = heappop(min_heap)
+        print(x, x)
+    else:
+        print("EMPTY")
