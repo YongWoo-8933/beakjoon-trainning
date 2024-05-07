@@ -30,50 +30,50 @@ Q에 저장될 모든 정수는 -2^31 이상 2^31 미만인 정수이다.
 두 값은 한 줄에 출력하되 하나의 공백으로 구분하라. 만약 Q가 비어있다면 ‘EMPTY’를 출력하라.
 
 예제 입력 1 
-1
-13
-I 1
-I 1
-I 1
-I 1
-D 1
-D 1
-I 0
-I 1
-I 2
-D -1
-D -1
-D -1
-D -1
+5 5
+1 2 3 4 5
+5 4 3 2 1
+2 3 4 5 6
+6 5 4 3 2
+1 2 1 2 1
 """
-from heapq import heappush, heappop
+from collections import deque
 from sys import stdin
 
-for _ in range(int(stdin.readline())):
-    min_heap, max_heap = [], []
-    min_popped, max_popped = 0, 0
-    for _ in range(int(stdin.readline())):
-        option = stdin.readline().strip()
-        if option[0] == "I":
-            x = int(option[2:])
-            heappush(min_heap, x)
-            heappush(max_heap, -x)
-        elif option[2] == "1":
-            if len(max_heap) > min_popped:
-                max_popped += 1
-                heappop(max_heap)
-        else:
-            if len(min_heap) > max_popped:
-                min_popped += 1
-                heappop(min_heap)
-        if len(max_heap) == min_popped or len(min_heap) == max_popped:
-            min_heap, max_heap = [], []
-            min_popped, max_popped = 0, 0
-    remain = len(min_heap) - max_popped
-    if remain > 1:
-        print(-heappop(max_heap), heappop(min_heap))
-    elif remain == 1:
-        x = heappop(min_heap)
-        print(x, x)
-    else:
-        print("EMPTY")
+N, M = map(int, stdin.readline().split())
+MAP = [[*map(int, i.split())] for i in stdin]
+answer = 0
+for row_i in range(N):
+    for col_j in range(M):
+        q = deque([(-1, MAP[row_i][col_j], -1, -1, row_i, col_j)])
+        while q:
+            count, value, p_row, p_col, row, col = q.popleft()
+            if count == 2:
+                answer = max(answer, value)
+                continue
+            directions = [None] * 4
+            count += 1
+            if row > 0 and row-1 != p_row:
+                q.append((count, value+MAP[row-1][col], row, col, row-1, col))
+                directions[0] = (row-1, col, row, col, MAP[row-1][col])
+            if col > 0 and p_col != col-1:
+                q.append((count, value+MAP[row][col-1], row, col, row, col-1))
+                directions[1] = (row, col-1, row, col, MAP[row][col-1])
+            if row < N-1 and row+1 != p_row:
+                q.append((count, value+MAP[row+1][col], row, col, row+1, col))
+                directions[2] = (row+1, col, row, col, MAP[row+1][col])
+            if col < M-1 and col+1 != p_col:
+                q.append((count, value+MAP[row][col+1], row, col, row, col+1))
+                directions[3] = (row, col+1, row, col, MAP[row][col+1])
+            if count == 1:
+                count += 1
+                for i in range(4):
+                    x, y = directions[i], directions[(i+1)%4]
+                    if x and y:
+                        new_value = value + x[4] + y[4]
+                        q.append((count, new_value, x[2], x[3], x[0], x[1]))
+                        q.append((count, new_value, y[2], y[3], y[0], y[1]))
+print(answer, cal)
+
+
+
