@@ -1,79 +1,97 @@
 """
-이중 우선순위 큐(dual priority queue)는 전형적인 우선순위 큐처럼 데이터를 삽입, 삭제할 수 있는 자료 구조이다. 
-전형적인 큐와의 차이점은 데이터를 삭제할 때 연산(operation) 명령에 따라 
-우선순위가 가장 높은 데이터 또는 가장 낮은 데이터 중 하나를 삭제하는 점이다. 
-이중 우선순위 큐를 위해선 두 가지 연산이 사용되는데, 
-하나는 데이터를 삽입하는 연산이고 다른 하나는 데이터를 삭제하는 연산이다. 
-데이터를 삭제하는 연산은 또 두 가지로 구분되는데 
-하나는 우선순위가 가장 높은 것을 삭제하기 위한 것이고 
-다른 하나는 우선순위가 가장 낮은 것을 삭제하기 위한 것이다.
+문제
+N×M의 행렬로 표현되는 맵이 있다. 맵에서 0은 이동할 수 있는 곳을 나타내고, 1은 이동할 수 없는 벽이 있는 곳을 나타낸다. 
+당신은 (1, 1)에서 (N, M)의 위치까지 이동하려 하는데, 이때 최단 경로로 이동하려 한다. 
+최단경로는 맵에서 가장 적은 개수의 칸을 지나는 경로를 말하는데, 이때 시작하는 칸과 끝나는 칸도 포함해서 센다.
 
-정수만 저장하는 이중 우선순위 큐 Q가 있다고 가정하자. Q에 저장된 각 정수의 값 자체를 우선순위라고 간주하자.
+만약에 이동하는 도중에 한 개의 벽을 부수고 이동하는 것이 좀 더 경로가 짧아진다면, 
+벽을 한 개 까지 부수고 이동하여도 된다.
 
-Q에 적용될 일련의 연산이 주어질 때 이를 처리한 후 
-최종적으로 Q에 저장된 데이터 중 최댓값과 최솟값을 출력하는 프로그램을 작성하라.
+한 칸에서 이동할 수 있는 칸은 상하좌우로 인접한 칸이다.
+
+맵이 주어졌을 때, 최단 경로를 구해 내는 프로그램을 작성하시오.
 
 입력
-입력 데이터는 표준입력을 사용한다. 입력은 T개의 테스트 데이터로 구성된다. 
-입력의 첫 번째 줄에는 입력 데이터의 수를 나타내는 정수 T가 주어진다. 
-각 테스트 데이터의 첫째 줄에는 Q에 적용할 연산의 개수를 나타내는 정수 k (k ≤ 1,000,000)가 주어진다. 
-이어지는 k 줄 각각엔 연산을 나타내는 문자(‘D’ 또는 ‘I’)와 정수 n이 주어진다. 
-‘I n’은 정수 n을 Q에 삽입하는 연산을 의미한다. 동일한 정수가 삽입될 수 있음을 참고하기 바란다. 
-‘D 1’는 Q에서 최댓값을 삭제하는 연산을 의미하며, ‘D -1’는 Q 에서 최솟값을 삭제하는 연산을 의미한다. 
-최댓값(최솟값)을 삭제하는 연산에서 최댓값(최솟값)이 둘 이상인 경우, 하나만 삭제됨을 유념하기 바란다.
-
-만약 Q가 비어있는데 적용할 연산이 ‘D’라면 이 연산은 무시해도 좋다. 
-Q에 저장될 모든 정수는 -2^31 이상 2^31 미만인 정수이다.
+첫째 줄에 N(1 ≤ N ≤ 1,000), M(1 ≤ M ≤ 1,000)이 주어진다. 
+다음 N개의 줄에 M개의 숫자로 맵이 주어진다. (1, 1)과 (N, M)은 항상 0이라고 가정하자.
 
 출력
-출력은 표준출력을 사용한다. 각 테스트 데이터에 대해, 모든 연산을 처리한 후 Q에 남아 있는 값 중 최댓값과 최솟값을 출력하라. 
-두 값은 한 줄에 출력하되 하나의 공백으로 구분하라. 만약 Q가 비어있다면 ‘EMPTY’를 출력하라.
+첫째 줄에 최단 거리를 출력한다. 불가능할 때는 -1을 출력한다.
 
 예제 입력 1 
-5 5
-1 2 3 4 5
-5 4 3 2 1
-2 3 4 5 6
-6 5 4 3 2
-1 2 1 2 1
+6 4
+0100
+1110
+1000
+0000
+0111
+0000
+예제 출력 1 
+15
+예제 입력 2 
+4 4
+0111
+1111
+1111
+1110
+예제 출력 2 
+-1
 """
-from collections import deque
 from sys import stdin
+from collections import deque
+from copy import deepcopy
 
-N, M = map(int, stdin.readline().split())
-MAP = [[*map(int, i.split())] for i in stdin]
-answer = 0
-for row_i in range(N):
-    for col_j in range(M):
-        q = deque([(-1, MAP[row_i][col_j], -1, -1, row_i, col_j)])
-        while q:
-            count, value, p_row, p_col, row, col = q.popleft()
-            if count == 2:
-                answer = max(answer, value)
-                continue
-            directions = [None] * 4
-            count += 1
-            if row > 0 and row-1 != p_row:
-                q.append((count, value+MAP[row-1][col], row, col, row-1, col))
-                directions[0] = (row-1, col, row, col, MAP[row-1][col])
-            if col > 0 and p_col != col-1:
-                q.append((count, value+MAP[row][col-1], row, col, row, col-1))
-                directions[1] = (row, col-1, row, col, MAP[row][col-1])
-            if row < N-1 and row+1 != p_row:
-                q.append((count, value+MAP[row+1][col], row, col, row+1, col))
-                directions[2] = (row+1, col, row, col, MAP[row+1][col])
-            if col < M-1 and col+1 != p_col:
-                q.append((count, value+MAP[row][col+1], row, col, row, col+1))
-                directions[3] = (row, col+1, row, col, MAP[row][col+1])
-            if count == 1:
-                count += 1
-                for i in range(4):
-                    x, y = directions[i], directions[(i+1)%4]
-                    if x and y:
-                        new_value = value + x[4] + y[4]
-                        q.append((count, new_value, x[2], x[3], x[0], x[1]))
-                        q.append((count, new_value, y[2], y[3], y[0], y[1]))
-print(answer, cal)
+H, W = map(int, stdin.readline().split())
+walls = []
+MAP = [[0]*W for _ in range(H)]
+for i in range(H):
+    s = stdin.readline()
+    for j in range(W):
+        if int(s[j]):
+            walls.append((i, j))
+            MAP[i][j] = 1
+hole = None
+for i in range(H):
+    for j in range(W):
+        x = MAP[i][j]
+        if not x:
+            opened = False
+            if (i>0 and MAP[i-1][j]==0) or \
+               (j>0 and MAP[i][j-1]==0) or \
+               (i<H-1 and MAP[i+1][j]==0) or \
+               (j<W-1 and MAP[i][j+1]==0):
+                opened = True
+            if not opened:
 
+                
+
+MAPS = []
+MAPS.append(deepcopy(MAP))
+for i, j in walls:
+    temp = deepcopy(MAP)
+    temp[i][j] = 0
+    MAPS.append(temp)
+answer = None
+for m in MAPS:
+    q = deque([(1, 0, 0)])
+    m[0][0] = 1
+    while q:
+        count, row, col = q.popleft()
+        if row==H-1 and col==W-1:
+            answer = count if answer is None else min(count, answer)
+        count += 1
+        if row>0 and m[row-1][col]==0:
+            m[row-1][col] = 1
+            q.append((count, row-1, col))
+        if col>0 and m[row][col-1]==0:
+            m[row][col-1] = 1
+            q.append((count, row, col-1))
+        if row<H-1 and m[row+1][col]==0:
+            m[row+1][col] = 1
+            q.append((count, row+1, col))
+        if col<W-1 and m[row][col+1]==0:
+            m[row][col+1] = 1
+            q.append((count, row, col+1))
+print(-1 if answer is None else answer)
 
 
