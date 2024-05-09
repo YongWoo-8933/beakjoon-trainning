@@ -1,97 +1,56 @@
 """
 문제
-N×M의 행렬로 표현되는 맵이 있다. 맵에서 0은 이동할 수 있는 곳을 나타내고, 1은 이동할 수 없는 벽이 있는 곳을 나타낸다. 
-당신은 (1, 1)에서 (N, M)의 위치까지 이동하려 하는데, 이때 최단 경로로 이동하려 한다. 
-최단경로는 맵에서 가장 적은 개수의 칸을 지나는 경로를 말하는데, 이때 시작하는 칸과 끝나는 칸도 포함해서 센다.
-
-만약에 이동하는 도중에 한 개의 벽을 부수고 이동하는 것이 좀 더 경로가 짧아진다면, 
-벽을 한 개 까지 부수고 이동하여도 된다.
-
-한 칸에서 이동할 수 있는 칸은 상하좌우로 인접한 칸이다.
-
-맵이 주어졌을 때, 최단 경로를 구해 내는 프로그램을 작성하시오.
+방향그래프가 주어지면 주어진 시작점에서 다른 모든 정점으로의 최단 경로를 구하는 프로그램을 작성하시오. 
+단, 모든 간선의 가중치는 10 이하의 자연수이다.
 
 입력
-첫째 줄에 N(1 ≤ N ≤ 1,000), M(1 ≤ M ≤ 1,000)이 주어진다. 
-다음 N개의 줄에 M개의 숫자로 맵이 주어진다. (1, 1)과 (N, M)은 항상 0이라고 가정하자.
+첫째 줄에 정점의 개수 V와 간선의 개수 E가 주어진다. (1 ≤ V ≤ 20,000, 1 ≤ E ≤ 300,000) 
+모든 정점에는 1부터 V까지 번호가 매겨져 있다고 가정한다. 
+둘째 줄에는 시작 정점의 번호 K(1 ≤ K ≤ V)가 주어진다. 
+셋째 줄부터 E개의 줄에 걸쳐 각 간선을 나타내는 세 개의 정수 (u, v, w)가 순서대로 주어진다. 
+이는 u에서 v로 가는 가중치 w인 간선이 존재한다는 뜻이다. 
+
+u와 v는 서로 다르며 w는 10 이하의 자연수이다. 
+서로 다른 두 정점 사이에 여러 개의 간선이 존재할 수도 있음에 유의한다.
 
 출력
-첫째 줄에 최단 거리를 출력한다. 불가능할 때는 -1을 출력한다.
+첫째 줄부터 V개의 줄에 걸쳐, i번째 줄에 i번 정점으로의 최단 경로의 경로값을 출력한다. 
+시작점 자신은 0으로 출력하고, 경로가 존재하지 않는 경우에는 INF를 출력하면 된다.
 
 예제 입력 1 
-6 4
-0100
-1110
-1000
-0000
-0111
-0000
+5 6
+1
+5 1 1
+1 2 2
+1 3 3
+2 3 4
+2 4 5
+3 4 6
 예제 출력 1 
-15
-예제 입력 2 
-4 4
-0111
-1111
-1111
-1110
-예제 출력 2 
--1
+0
+2
+3
+7
+INF
 """
-from sys import stdin
 from collections import deque
-from copy import deepcopy
-
-H, W = map(int, stdin.readline().split())
-walls = []
-MAP = [[0]*W for _ in range(H)]
-for i in range(H):
-    s = stdin.readline()
-    for j in range(W):
-        if int(s[j]):
-            walls.append((i, j))
-            MAP[i][j] = 1
-hole = None
-for i in range(H):
-    for j in range(W):
-        x = MAP[i][j]
-        if not x:
-            opened = False
-            if (i>0 and MAP[i-1][j]==0) or \
-               (j>0 and MAP[i][j-1]==0) or \
-               (i<H-1 and MAP[i+1][j]==0) or \
-               (j<W-1 and MAP[i][j+1]==0):
-                opened = True
-            if not opened:
-
-                
-
-MAPS = []
-MAPS.append(deepcopy(MAP))
-for i, j in walls:
-    temp = deepcopy(MAP)
-    temp[i][j] = 0
-    MAPS.append(temp)
-answer = None
-for m in MAPS:
-    q = deque([(1, 0, 0)])
-    m[0][0] = 1
-    while q:
-        count, row, col = q.popleft()
-        if row==H-1 and col==W-1:
-            answer = count if answer is None else min(count, answer)
-        count += 1
-        if row>0 and m[row-1][col]==0:
-            m[row-1][col] = 1
-            q.append((count, row-1, col))
-        if col>0 and m[row][col-1]==0:
-            m[row][col-1] = 1
-            q.append((count, row, col-1))
-        if row<H-1 and m[row+1][col]==0:
-            m[row+1][col] = 1
-            q.append((count, row+1, col))
-        if col<W-1 and m[row][col+1]==0:
-            m[row][col+1] = 1
-            q.append((count, row, col+1))
-print(-1 if answer is None else answer)
+from sys import stdin
+N, _ = map(int, stdin.readline().split())
+start = int(stdin.readline())
+lst = [[] for _ in range(N+1)]
+for i in stdin:
+    fr, to, v = map(int, i.split())
+    lst[fr].append((to, v))
+q = deque([(0, start)])
+check = ["INF"]*(N+1)
+check[start] = 0
+while q:
+    value, node = q.popleft()
+    for next_node, next_value in lst[node]:
+        if check[next_node] == "INF" or (check[next_node] != "INF" and value+next_value < check[next_node]):
+            check[next_node] = value+next_value
+            q.append((value+next_value, next_node))
+print(*check[1:])
+    
 
 
