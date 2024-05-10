@@ -1,56 +1,82 @@
 """
 문제
-방향그래프가 주어지면 주어진 시작점에서 다른 모든 정점으로의 최단 경로를 구하는 프로그램을 작성하시오. 
-단, 모든 간선의 가중치는 10 이하의 자연수이다.
+때는 2020년, 백준이는 월드나라의 한 국민이다. 월드나라에는 N개의 지점이 있고 N개의 지점 사이에는 M개의 도로와 W개의 웜홀이 있다. 
+(단 도로는 방향이 없으며 웜홀은 방향이 있다.) 웜홀은 시작 위치에서 도착 위치로 가는 하나의 경로인데, 
+특이하게도 도착을 하게 되면 시작을 하였을 때보다 시간이 뒤로 가게 된다. 웜홀 내에서는 시계가 거꾸로 간다고 생각하여도 좋다.
+
+시간 여행을 매우 좋아하는 백준이는 한 가지 궁금증에 빠졌다. 
+한 지점에서 출발을 하여서 시간여행을 하기 시작하여 다시 출발을 하였던 위치로 돌아왔을 때, 
+출발을 하였을 때보다 시간이 되돌아가 있는 경우가 있는지 없는지 궁금해졌다. 
+여러분은 백준이를 도와 이런 일이 가능한지 불가능한지 구하는 프로그램을 작성하여라.
 
 입력
-첫째 줄에 정점의 개수 V와 간선의 개수 E가 주어진다. (1 ≤ V ≤ 20,000, 1 ≤ E ≤ 300,000) 
-모든 정점에는 1부터 V까지 번호가 매겨져 있다고 가정한다. 
-둘째 줄에는 시작 정점의 번호 K(1 ≤ K ≤ V)가 주어진다. 
-셋째 줄부터 E개의 줄에 걸쳐 각 간선을 나타내는 세 개의 정수 (u, v, w)가 순서대로 주어진다. 
-이는 u에서 v로 가는 가중치 w인 간선이 존재한다는 뜻이다. 
+첫 번째 줄에는 테스트케이스의 개수 TC(1 ≤ TC ≤ 5)가 주어진다. 
+그리고 두 번째 줄부터 TC개의 테스트케이스가 차례로 주어지는데 
+각 테스트케이스의 첫 번째 줄에는 지점의 수 N(1 ≤ N ≤ 500), 도로의 개수 M(1 ≤ M ≤ 2500), 웜홀의 개수 W(1 ≤ W ≤ 200)이 주어진다. 
+그리고 두 번째 줄부터 M+1번째 줄에 도로의 정보가 주어지는데 각 도로의 정보는 S, E, T 세 정수로 주어진다. 
+S와 E는 연결된 지점의 번호, T는 이 도로를 통해 이동하는데 걸리는 시간을 의미한다. 
+그리고 M+2번째 줄부터 M+W+1번째 줄까지 웜홀의 정보가 S, E, T 세 정수로 주어지는데 S는 시작 지점, E는 도착 지점, T는 줄어드는 시간을 의미한다. T는 10,000보다 작거나 같은 자연수 또는 0이다.
 
-u와 v는 서로 다르며 w는 10 이하의 자연수이다. 
-서로 다른 두 정점 사이에 여러 개의 간선이 존재할 수도 있음에 유의한다.
+두 지점을 연결하는 도로가 한 개보다 많을 수도 있다. 지점의 번호는 1부터 N까지 자연수로 중복 없이 매겨져 있다.
 
 출력
-첫째 줄부터 V개의 줄에 걸쳐, i번째 줄에 i번 정점으로의 최단 경로의 경로값을 출력한다. 
-시작점 자신은 0으로 출력하고, 경로가 존재하지 않는 경우에는 INF를 출력하면 된다.
+TC개의 줄에 걸쳐서 만약에 시간이 줄어들면서 출발 위치로 돌아오는 것이 가능하면 YES, 불가능하면 NO를 출력한다.
 
 예제 입력 1 
-5 6
-1
-5 1 1
-1 2 2
-1 3 3
-2 3 4
-2 4 5
-3 4 6
-예제 출력 1 
-0
 2
-3
-7
-INF
+3 3 1
+1 2 2
+1 3 4
+2 3 1
+3 1 3
+3 2 1
+1 2 3
+2 3 4
+3 1 8
+예제 출력 1 
+NO
+YES
 """
-from collections import deque
 from sys import stdin
-N, _ = map(int, stdin.readline().split())
-start = int(stdin.readline())
-lst = [[] for _ in range(N+1)]
-for i in stdin:
-    fr, to, v = map(int, i.split())
-    lst[fr].append((to, v))
-q = deque([(0, start)])
-check = ["INF"]*(N+1)
-check[start] = 0
-while q:
-    value, node = q.popleft()
-    for next_node, next_value in lst[node]:
-        if check[next_node] == "INF" or (check[next_node] != "INF" and value+next_value < check[next_node]):
-            check[next_node] = value+next_value
-            q.append((value+next_value, next_node))
-print(*check[1:])
+INF = 10**8
+
+for _ in range(int(stdin.readline())):
+    N, R, W = map(int, stdin.readline().split())
+    lst = [{} for _ in range(N+1)]
+    for _ in range(R):
+        fr, to, time = map(int, stdin.readline().split())
+        if to in lst[fr]:
+            if time < lst[fr][to]:
+                lst[fr][to] = time
+        else:
+            lst[fr][to] = time
+        if fr in lst[to]:
+            if time < lst[to][fr]:
+                lst[to][fr] = time
+        else:
+            lst[to][fr] = time
+    for _ in range(W):
+        fr, to, time = map(int, stdin.readline().split())
+        lst[fr][to] = -time
+    
+    check = [INF]*(N+1)
+    check[1] = 0
+    for i in range(N):
+        for fr in range(1, N+1):
+            for to, time in lst[fr].items():
+                if check[to] > check[fr] + time:
+                    check[to] = check[fr] + time
+                    if i == N-1:
+                        print("YES")
+                        break
+            else:
+                continue
+            break
+        else:
+            continue
+        break
+    else:
+        print("NO")
     
 
 
