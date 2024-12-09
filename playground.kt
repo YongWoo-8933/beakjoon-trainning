@@ -1,19 +1,24 @@
-// 윤년은 연도가 4의 배수이면서, 100의 배수가 아닐 때 또는 400의 배수일 때이다.
 
-// 예를 들어, 2012년은 4의 배수이면서 100의 배수가 아니라서 윤년이다. 
-// 1900년은 100의 배수이고 400의 배수는 아니기 때문에 윤년이 아니다. 
-// 하지만, 2000년은 400의 배수이기 때문에 윤년
-
-
-
-fun main() {
-    // val year = readln().toInt()
-    val year = 57
-    print(
-        when {
-            year%400 == 0 -> 1
-            year%4 == 0 && year%100 != 0 -> 1
-            else -> 0
+fun main(
+    video_len: String, 
+    pos: String, 
+    op_start: String, 
+    op_end: String, 
+    commands: Array<String>
+): String {
+    val videoLen = 60*video_len.slice(0..1).toInt() + video_len.slice(3..4).toInt()
+    val startPos = 60*pos.slice(0..1).toInt() + pos.slice(3..4).toInt()
+    val opStart = 60*op_start.slice(0..1).toInt() + op_start.slice(3..4).toInt()
+    val opEnd = 60*op_end.slice(0..1).toInt() + op_end.slice(3..4).toInt()
+    
+    var curPos = if(opStart<=startPos && startPos<opEnd) { opEnd } else { startPos }
+    commands.forEach { command: String ->
+        when(command) {
+            "next" -> curPos = listOf(opEnd, curPos+10).min()
+            "prev" -> curPos = listOf(0, curPos-10).max()
         }
-    )
+    }
+    val df = DecimalFormat("##")
+    
+    return "${df.format(curPos/60)}:${df.format(curPos%60)}"
 }
